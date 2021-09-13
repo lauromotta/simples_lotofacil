@@ -1,0 +1,17 @@
+LICENSE
+MANIFEST.in
+README.md
+requirements-dev.txt
+requirements.txt
+setup.cfg
+setup.py
+halo/__init__.py
+halo/_utils.py
+halo/cursor.py
+halo/halo.py
+halo/halo_notebook.py
+halo.egg-info/PKG-INFO
+halo.egg-info/SOURCES.txt
+halo.egg-info/dependency_links.txt
+halo.egg-info/requires.txt
+halo.egg-info/top_level.txt
