@@ -11,7 +11,9 @@ import math
 import sys
 
 print(sys.version_info)
-os.system('cls')
+
+
+
 
 def dash(d):
     try:
