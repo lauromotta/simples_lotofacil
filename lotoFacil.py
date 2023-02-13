@@ -1,7 +1,7 @@
-
 import numpy as np
 from itertools import permutations
-import requests
+
+from bs4 import BeautifulSoup
 import pandas as pd
 import time
 import os
@@ -9,6 +9,16 @@ import random
 from halo import Halo
 import math
 import sys
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options 
+
+from selenium.webdriver.support.ui import WebDriverWait 
+from selenium.webdriver.support import expected_conditions as EC
+# from selenium.webdriver.common.action_chains import ActionChains
+# from selenium.webdriver.common.keys import Keys
+
 
 print(sys.version_info)
 
@@ -28,11 +38,95 @@ def downloadURL():
     spinner = Halo(text=f'\nCarregando todos os Jogos', spinner='dots')
     spinner.start()
 
-    html_content = r'http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotofacil/!ut/p/a1/04_Sj9CPykssy0xPLMnMz0vMAfGjzOLNDH0MPAzcDbz8vTxNDRy9_Y2NQ13CDA0sTIEKIoEKnN0dPUzMfQwMDEwsjAw8XZw8XMwtfQ0MPM2I02-AAzgaENIfrh-FqsQ9wBmoxN_FydLAGAgNTKEK8DkRrACPGwpyQyMMMj0VAcySpRM!/dl5/d5/L2dBISEvZ0FBIS9nQSEh/pw/Z7_HGK818G0K85260Q5OIRSC42046/res/id=historicoHTML/c=cacheLevelPage/=/'
-    r = requests.get(html_content)
-    df_full = pd.read_html(r.text)[0]
+    chrome_options = Options()
+    chrome_options.headless = True
+    driverChrome = 'chromedriver.exe'
+    try:
+        driver = webdriver.Chrome(f'{os.path.dirname(__file__)}\\driver\\{driverChrome}', options=chrome_options, service_log_path=f'{os.path.dirname(__file__)}\\log\\log.txt')
+    except:
+        pass
+
+    driver.get("https://loterias.caixa.gov.br/Paginas/Lotofacil.aspx")
+
+    os.system('cls')
+    t = time.time() + 60
+    while t > time.time():
+        try:
+            driver.find_element(By.ID,'adopt-accept-all-button').click()
+            break
+        except:
+            pass
+
+    t = time.time() + 60
+    while t > time.time():
+        
+        try:
+            element = driver.find_element(By.CSS_SELECTOR,'a.title.zeta')
+            element.click()
+            break
+        except:
+            pass
+
+    os.system('cls')
+    time.sleep(5)
+    windows = driver.window_handles
+    driver.switch_to.window(windows[1])
+    time.sleep(3)
+
+    # driver.refresh()
+    t = time.time() + 120
+    t2 = time.time() + 10
+    while t > time.time():
+        os.system('cls')
+        try:
+            table = driver.find_element(By.CSS_SELECTOR,'.tabela-resultado.lotofacil')
+            break
+        except:
+
+            if t2 < time.time():
+                driver.refresh()
+                t2 = time.time() + 10
+            pass
+
+    try:
+        parsed_html = BeautifulSoup(table.get_attribute('outerHTML'))
+    except:
+        pass
+
+    os.system('cls')
+
+    driver.close()
+    time.sleep(1)
+    tables = parsed_html.find_all('tr')
+    # tables = parsed_html.find_all('td')
+
+    listas = []
+    os.system('cls')
+    for tr in tables:
+        tds = tr.find_all('td')
+        count = 0
+        number = []
+        for td in tds:
+            if count < 19:
+                print(td.text, end='\r')
+                number.append(td.text)
+                count += 1
+
+        if len(number) > 5:
+            listas.append(number)
+        # print()
+    
+    keys = ['concurso', 'Data_Sorteio','Bola1','Bola2','Bola3','Bola4','Bola5','Bola6','Bola7','Bola8','Bola9','Bola10','Bola11','Bola12','Bola13','Bola14','Bola15','Arrecadação_Total','Ganhadores_15_Números'
+            ]
+    jogos = [dict(zip(keys, resultados)) for resultados in listas]
+
+    df_full = pd.DataFrame(jogos)
+
     spinner.stop()
     return df_full
+
+
+
 
 def valorTotal(qntJogos, numJogos):
     return len(qntJogos) * 2.5 if numJogos == 15 else len(qntJogos) * 40.0 if numJogos == 16 else len(qntJogos) * 340.0 if numJogos == 17 else len(qntJogos) * 2040.0 if numJogos == 18 else len(qntJogos) * 9690.00 if numJogos == 19 else len(qntJogos) * 38760.0 if numJogos == 20 else 0
@@ -151,16 +245,18 @@ def nub(nj):
 
 
 
+# print()
+
+
+
 def main():
 
     qntsJogos = []
     nJogosFeitos = 0
 
-    
-
     while True:
         try:
-            print('Ex. 15 ou 16 ou 17 ou 18 ou 19 ou 20')
+            print('Ex. Escolha um número entre 15 e 20.')
             nj = int(input('Número de Jogos: '))#15
             if nj >= 15 and nj <=20:
                 break
@@ -205,22 +301,23 @@ def main():
 
     os.system('cls')
 
-    print(
-        f'Total de 25 de {nj} combinações: {cr(coT[:-4].replace(",", "."), "g")}\n')
+    print(f'Total de 25 de {nj} combinações: {cr(coT[:-4].replace(",", "."), "g")}\n')
 
+    df_full = downloadURL()
     while True:
 
         arr = porc * nJogosFeitos
         
         if downl < time.time():
             
-            df_full = downloadURL()
+            # df_full = downloadURL()
             tabela_jogo = df_full[['Bola1', 'Bola2', 'Bola3', 'Bola4', 'Bola5', 'Bola6', 'Bola7', 'Bola8', 'Bola9', 'Bola10', 'Bola11', 'Bola12', 'Bola13', 'Bola14', 'Bola15']]
-            tabela_jogo_Ganhadores = df_full[['Bola1', 'Bola2', 'Bola3', 'Bola4', 'Bola5', 'Bola6', 'Bola7', 'Bola8', 'Bola9', 'Bola10', 'Bola11', 'Bola12', 'Bola13', 'Bola14', 'Bola15', 'Ganhadores_15_N��meros']]
+            # tabela_jogo_Ganhadores = df_full[['Bola1', 'Bola2', 'Bola3', 'Bola4', 'Bola5', 'Bola6', 'Bola7', 'Bola8', 'Bola9', 'Bola10', 'Bola11', 'Bola12', 'Bola13', 'Bola14', 'Bola15', 'Ganhadores_15_Números']]
             tabelaJogos = [list(ix) for ix in tabela_jogo.values]
+            tabelaJogos = [[int(i) for i in x] for x in tabelaJogos]
+
             downl = time.time() + 3600
-        
-        
+
         nJogosFeitos += 1
 
         if len(qntsJogos) == quatidadesdejogos:
@@ -268,12 +365,12 @@ def main():
             if ms and bolTodosJogos and bol:
                 break
 
-        qntsJogos.append(ng)
 
+        qntsJogos.append(ng)
         
     vTotal = f'R$ {valorTotal(qntsJogos, nj):_.2f}'
     vTotal = vTotal.replace('.', ",").replace('_', '.')
-    print(f'\nValor Total dos {len(qntsJogos)} jogos: {cr(vTotal, "g")}')
+    print(f'\n      Valor Total dos {len(qntsJogos)} jogos: {cr(vTotal, "g")}')
 
 
 if __name__ == '__main__':
