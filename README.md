@@ -450,8 +450,8 @@ Este software e destinado **APENAS** para fins educacionais e de pesquisa em pro
 
 ## 📞 Contato
 
-- GitHub: [@seu-usuario](https://github.com/seu-usuario)
-- Issues: [GitHub Issues](https://github.com/seu-usuario/lotofacil-pro/issues)
+- GitHub: [@lauromotta](https://github.com/lauromotta)
+- Issues: [GitHub Issues](https://github.com/lauromotta/lotofacil-pro/issues)
 
 ---
 
