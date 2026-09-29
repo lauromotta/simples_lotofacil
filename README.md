@@ -3,6 +3,8 @@
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/lauromotta/simples_lotofacil?style=flat&color=2e8b57)](https://github.com/lauromotta/simples_lotofacil/stargazers)
+[![Ultimo commit](https://img.shields.io/github/last-commit/lauromotta/simples_lotofacil?color=2e8b57)](https://github.com/lauromotta/simples_lotofacil/commits)
 
 Sistema profissional de analise probabilistica da Lotofacil com multiplas estrategias de geracao, backtesting historico, simulacao Monte Carlo e API REST completa.
 
@@ -426,6 +428,17 @@ Contribuicoes sao bem-vindas! Para contribuir:
 - Documente funcoes com docstrings
 - Use conventional commits
 
+## 🚧 Roadmap
+
+Melhorias planejadas para versoes futuras:
+
+- [ ] CI com GitHub Actions (lint + pytest em Python 3.10-3.12)
+- [ ] Cobertura de testes unitarios por estrategia (py.test + coverage)
+- [ ] Dashboard interativo para exploracao de resultados
+- [ ] Dockerfile e docker-compose para subir a API em 1 comando
+- [ ] Cache de jogos gerados (reduzir custo de combinacao)
+- [ ] Exportar backtests em CSV/Parquet
+
 ## 📝 Licenca
 
 Este projeto esta sob a licenca MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
@@ -451,7 +464,7 @@ Este software e destinado **APENAS** para fins educacionais e de pesquisa em pro
 ## 📞 Contato
 
 - GitHub: [@lauromotta](https://github.com/lauromotta)
-- Issues: [GitHub Issues](https://github.com/lauromotta/lotofacil-pro/issues)
+- Issues: [GitHub Issues](https://github.com/lauromotta/simples_lotofacil/issues)
 
 ---
 
